@@ -41,20 +41,28 @@ if (components) {
         componentsData[componentName] = [];
 
         // Components destiny
-        let dests = ['admin', 'site', 'media']
+        let dests = ['Admin', 'Site', 'Media']
         componentsData[componentName]['dest'] = [];
-        for (dest in dests) {
-            componentsData[componentName]['dest'][`${dests[dest]}`] = `${destRoot}/components/${componentName}/${dests[dest]}/`;
+        for (index in dests) {
+            dest = dests[index].toLocaleLowerCase();
+            componentsData[componentName]['dest'][`${dests[index]}`] = `${destRoot}/components/${componentName}/${dest}/`;
         }
+
+        componentsData[componentName]['dest']['AdminLanguage'] = `${componentsData[componentName]['dest']['admin']}/language/`;
+        componentsData[componentName]['dest']['SiteLanguage'] = `${componentsData[componentName]['dest']['site']}/language/`;
+        componentsData[componentName]['dest']['Manifest'] = `${destRoot}/components/${componentName}/`;
 
         // Components source folders
         componentsData[componentName]['src'] = [];
-        componentsData[componentName]['src']['admin'] = `${srcRoot}/administrator/components/com_${componentName}/**/*.*`;
-        componentsData[componentName]['src']['adminLanguage'] = (`${srcRoot}/administrator/language/**/*.com_${componentName}.*`);
-        componentsData[componentName]['src']['site'] = (`${srcRoot}/components/com_${componentName}/**/*.*`);
-        componentsData[componentName]['src']['siteLanguage'] = (`${srcRoot}/language/**/*.com_${componentName}.*`);
-        componentsData[componentName]['src']['media'] = (`${srcRoot}/media/com_${componentName}/**/*.*`);
-        componentsData[componentName]['src']['manifest'] = `${srcRoot}/administrator/components/com_${componentName}/${componentName}.xml`;
+        componentsData[componentName]['src']['Admin'] = [
+            `${srcRoot}/administrator/components/com_${componentName}/**/*.*`,
+            `!${srcRoot}/administrator/components/com_${componentName}/${componentName}.xml`
+        ];
+        componentsData[componentName]['src']['AdminLanguage'] = (`${srcRoot}/administrator/language/**/*.com_${componentName}.*`);
+        componentsData[componentName]['src']['Site'] = (`${srcRoot}/components/com_${componentName}/**/*.*`);
+        componentsData[componentName]['src']['SiteLanguage'] = (`${srcRoot}/language/**/*.com_${componentName}.*`);
+        componentsData[componentName]['src']['Media'] = (`${srcRoot}/media/com_${componentName}/**/*.*`);
+        componentsData[componentName]['src']['Manifest'] = `${srcRoot}/administrator/components/com_${componentName}/${componentName}.xml`;
     }
 
     exports.components = componentsData;
