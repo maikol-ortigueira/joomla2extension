@@ -1,0 +1,5 @@
+{
+    "extName": "nombre_de_la_extension_sin_prefijo",
+    "srcDir": "ruta_absoluta_instalacion_joomla",
+    "destDir": "ruta_absoluta_destino_codigo_extension"
+}

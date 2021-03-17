@@ -3,7 +3,32 @@ const {
     srcDir,
     destDir
 } = require('../config.json');
+const fs = require('fs');
+const path = require('path');
+var configPath = path.join(__dirname, '..');
+
+if (extName == 'undefined' || extName == '') {
+    console.error('\x1b[1m\x1b[33m=============================================================================================== ');
+    console.error("\x1b[37m|\n|   \x1b[31m!Error en el fichero \x1b[37m\"config.json\"\x1b[31m!\x1b[37m\n|");
+    console.error("|   Este fichero se encuentra en la carpeta:\n|");
+    console.error("|\x1b[32m   " + configPath + "\n\x1b[37m|");
+    console.error("|   Falta indicar el nombre de la extensión en la variable \x1b[34m\"extName\": \"\x1b[36mnombre_de_la_extension\x1b[34m\"\x1b[31m\n\x1b[37m|");
+    console.error('\x1b[33m===============================================================================================\x1b[0m');
+
+    return false;
+}
+
+if (!fs.existsSync(`${destDir}/${extName}/extensions-config.json`)) {
+    console.error('\x1b[1m\x1b[33m=============================================================================================== ');
+    console.error("\x1b[37m|\n|   \x1b[31m¡¡Error!!\x1b[37m   Falta el fichero de configuración de la extensión\n|");
+    console.error("|   Debes crear un fichero con el nombre \"\x1b[32mextensions-config.json\x1b[37m\" en la siguiente carpeta:\n|")
+    console.error("|   \x1b[32m"+`${destDir}/${extName}/`);
+    console.error("\x1b[37m|\n|   Puedes copiar, pegar y sustituir los valores del fichero \"extension-config.json.dist\".");
+    console.error("|   Deberás renombrarlo eliminando la extension \".dist\"\n|");
+    console.error('\x1b[33m===============================================================================================\x1b[0m');
+}
 const extConfig = require(`${destDir}/${extName}/extensions-config.json`);
+
 
 const hasComponents = () => {
     return (
@@ -77,7 +102,6 @@ const getModules = () => {
     }
     return false;
 }
-
 
 module.exports = {
     hasComponents,

@@ -1,5 +1,6 @@
 const config = require('../config.json');
 const utils = require('./utils');
+const capitalize = require('capitalize');
 
 var components = utils.getComponentsNames();
 var package = utils.getPackageName();
@@ -43,14 +44,21 @@ if (components) {
         // Components destiny
         let dests = ['Admin', 'Site', 'Media']
         componentsData[componentName]['dest'] = [];
+        componentsData[componentName]['clean'] = [];
         for (index in dests) {
             dest = dests[index].toLocaleLowerCase();
             componentsData[componentName]['dest'][`${dests[index]}`] = `${destRoot}/components/${componentName}/${dest}/`;
+            componentsData[componentName]['clean'][`${dests[index]}`] = `${destRoot}/components/${componentName}/${dest}/`;
         }
 
-        componentsData[componentName]['dest']['AdminLanguage'] = `${componentsData[componentName]['dest']['admin']}/language/`;
-        componentsData[componentName]['dest']['SiteLanguage'] = `${componentsData[componentName]['dest']['site']}/language/`;
+        componentsData[componentName]['dest']['AdminLanguage'] = `${componentsData[componentName]['dest']['Admin']}/language/`;
+        componentsData[componentName]['dest']['SiteLanguage'] = `${componentsData[componentName]['dest']['Site']}/language/`;
         componentsData[componentName]['dest']['Manifest'] = `${destRoot}/components/${componentName}/`;
+
+        // Components clear folders
+        componentsData[componentName]['clean']['AdminLanguage'] = `${componentsData[componentName]['clean']['Admin']}/language/`;
+        componentsData[componentName]['clean']['SiteLanguage'] = `${componentsData[componentName]['clean']['Site']}/language/`;
+        componentsData[componentName]['clean']['Manifest'] = `${destRoot}/components/${componentName}/${componentName}.xml`;
 
         // Components source folders
         componentsData[componentName]['src'] = [];
@@ -71,10 +79,32 @@ if (components) {
 }
 
 if (plugins) {
-    var destPlugins = [];
+    var pluginsData = [];
     var relativePaths = getRelativePaths(plugins)
-    for (path in relativePaths) {
-        destPlugins[path] = (`${destRoot}/plugins/${relativePaths[path]}`);
+    for (index in relativePaths) {
+        let splitedPliginName = relativePaths[index].split('/'),
+            pluginPath = relativePaths[index],
+            pluginName = splitedPliginName[1],
+            groupName = splitedPliginName[0],
+            group_pluginName = `${groupName}_${pluginName}`,
+            groupPluginNameCamelCase = capitalize(groupName) + capitalize(pluginName);
+
+            pluginsData[groupPluginNameCamelCase] = [];
+            pluginsData[groupPluginNameCamelCase]['dest'] = [];
+            pluginsData[groupPluginNameCamelCase]['src'] = [];
+
+        pluginsData[groupPluginNameCamelCase]['dest']['Content'] = (`${destRoot}/plugins/${pluginPath}/`);
+        pluginsData[groupPluginNameCamelCase]['dest']['Language'] = (`${destRoot}/plugins/${pluginPath}/language/`);
+
+        pluginsData[groupPluginNameCamelCase]['src']['Content'] = [
+                `${srcRoot}/plugins/${pluginPath}/**/*.*`,
+                `!${srcRoot}/plugins/${pluginPath}/language/**`,
+        ];
+        pluginsData[groupPluginNameCamelCase]['src']['Language'] = `${srcRoot}/administrator/language/**/*.plg_${group_pluginName}.*`;
     }
+
+    exports.plugins = pluginsData;
+} else {
+    exports.plugins = false;
 }
 
