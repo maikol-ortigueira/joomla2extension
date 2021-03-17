@@ -2,7 +2,7 @@
 
 ## ¿Porque?
 
-Yo dedico parte de mi tiempo a programar extensiones personalizadas para Joomla!. Necesito tener dichas extensines organizadas para poder empaquetar y crear un fichero autoinstalable.
+Yo dedico parte de mi tiempo a programar extensiones personalizadas para Joomla!. Necesito tener dichas extensiones organizadas para poder empaquetar y crear un fichero autoinstalable.
 
 Si eres desarrollador de componentes en Joomla sabrás que el paquete instalador de tu componente debe tener una estructura de carpetas y archivos específica, que no coincide exactamente con la estructura del componente una vez instalado en un sitio Joomla!. Hasta la fecha yo solucionaba este problema con mi "[joomla-gulp-system](https://github.com/maikol-ortigueira/joomla-gulp-system)".
 
@@ -12,7 +12,7 @@ Esto está bastante bien pero tiene algún inconveniente, y sin duda el más imp
 
 Pues bien, con mi Joomla2Extension realizo la automátización al revés, es decir, vigila mi extensión dentro de la instalación de Joomla y actualiza los cambios en mi carpeta final. Esto permite que solo tenga que trabajar dentro de la instalación de Joomla.
 
-Es cierto que esto hace un poco mas complicado actualizar los ficheros de idiomas, pero espero solucionar eso pronto.
+Es cierto que esto hace un poco mas complicado actualizar los ficheros de idiomas, pero espero solucionar esto pronto.
 
 ## ¿Como se instala?
 
