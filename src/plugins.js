@@ -80,11 +80,11 @@ if (plugins) {
 
         // Plugin Main tasks
         gulp.task(`clean${pluginMainTask}`,
-            gulp.parallel(...cleanPluginExtName)
+            gulp.series(...cleanPluginExtName)
         );
 
         gulp.task(`copy${pluginMainTask}`,
-            gulp.parallel(...copyPluginExtName)
+            gulp.series(...copyPluginExtName)
         );
 
         gulp.task(`watch${pluginMainTask}`,
@@ -93,7 +93,7 @@ if (plugins) {
     }
 
     // Plugins Main Tasks
-    gulp.task(`cleanPlugins`, gulp.series(...cleanPlugins));
-    gulp.task(`copyPlugins`, gulp.series(...copyPlugins));
-    gulp.task(`watchPlugins`, gulp.series(...watchPlugins));
+    gulp.task(`cleanPlugins`, gulp.parallel(...cleanPlugins));
+    gulp.task(`copyPlugins`, gulp.parallel(...copyPlugins));
+    gulp.task(`watchPlugins`, gulp.parallel(...watchPlugins));
 }

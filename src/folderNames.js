@@ -80,7 +80,8 @@ if (components) {
 
 if (plugins) {
     var pluginsData = [];
-    var relativePaths = getRelativePaths(plugins)
+    let relativePaths = getRelativePaths(plugins);
+
     for (index in relativePaths) {
         let splitedPliginName = relativePaths[index].split('/'),
             pluginPath = relativePaths[index],
@@ -108,3 +109,30 @@ if (plugins) {
     exports.plugins = false;
 }
 
+if (modules) {
+    var modulesData = [];
+    let relativePaths = getRelativePaths(modules);
+
+    for (index in relativePaths) {
+        let splitedModuleName = relativePaths[index].split('/'),
+            moduleName = splitedModuleName[1],
+            destModulePath = `${splitedModuleName[0]}/mod_${moduleName}`,
+            srcModulePath = splitedModuleName[0] == 'admin' ? `administrator/modules/mod_${moduleName}` : `modules/mod_${moduleName}`,
+            srcModuleLanguagePath = splitedModuleName[0] == 'admin' ? `administrator/language` : 'language',
+            clientModuleNameCamelCase = capitalize(splitedModuleName[0]) + capitalize(moduleName);
+
+        modulesData[clientModuleNameCamelCase] = [];
+        modulesData[clientModuleNameCamelCase]['dest'] = [];
+        modulesData[clientModuleNameCamelCase]['src'] = [];
+
+        modulesData[clientModuleNameCamelCase]['dest']['Content'] = `${destRoot}/modules/${destModulePath}/`;
+        modulesData[clientModuleNameCamelCase]['dest']['Language'] = `${destRoot}/modules/${destModulePath}/language/`;
+
+        modulesData[clientModuleNameCamelCase]['src']['Content'] = [`${srcRoot}/${srcModulePath}/**/*.*`, `!${srcRoot}/${srcModulePath}/language/**`];
+        modulesData[clientModuleNameCamelCase]['src']['Language'] = `${srcRoot}/${srcModuleLanguagePath}/**/*.mod_${moduleName}.*`;
+    }
+
+    exports.modules = modulesData;
+} else {
+    exports.modules = false;
+}

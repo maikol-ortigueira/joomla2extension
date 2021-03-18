@@ -181,11 +181,11 @@ for (component in components) {
     }
 
     gulp.task(`cleanComponent${cExtName}`,
-        gulp.parallel(...cleanComponentExtName)
+        gulp.series(...cleanComponentExtName)
     );
 
     gulp.task(`copyComponent${cExtName}`,
-        gulp.parallel(...copyComponentExtName)
+        gulp.series(...copyComponentExtName)
     );
 
     gulp.task(`watchComponent${cExtName}`,
@@ -194,6 +194,6 @@ for (component in components) {
 
 }
 
-gulp.task(`cleanComponents`, gulp.series(...cleanComponents));
-gulp.task(`copyComponents`, gulp.series(...copyComponents));
+gulp.task(`cleanComponents`, gulp.parallel(...cleanComponents));
+gulp.task(`copyComponents`, gulp.parallel(...copyComponents));
 gulp.task(`watchComponents`, gulp.parallel(...watchComponents));

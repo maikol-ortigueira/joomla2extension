@@ -76,7 +76,6 @@ Con el comando `gulp` el sistema vigilará el código tus extensiones (sólo de 
 
 ## Proximamente
 
-- Hasta el momento solo funciona con plugins y componentes, pero proximamente haré que funcione con módulos.
 - Pretendo crear una tarea que empaquete las extensiones listas para instalar en un Joomla!.
 
 ## Despedida
