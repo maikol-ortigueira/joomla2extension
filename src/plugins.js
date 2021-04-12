@@ -3,25 +3,32 @@ const {
 } = require('./folderNames');
 
 if (plugins) {
+    const GulpZip = require('gulp-zip');
     const gulp = require('gulp');
     const clean = require('gulp-clean');
+    const utils = require('./utils');
+    const fs = require('fs');
 
     const cleanPlugins = [],
         copyPlugins = [],
-        watchPlugins = [];
+        watchPlugins = [],
+        releasePlugins = [];
 
     for (plugin in plugins) {
         let cleanPluginExtName = [],
             copyPluginExtName = [],
             watchPluginExtName = [],
+            releasePluginExtName = [],
             srcPaths = plugins[plugin]['src'],
             destPaths = plugins[plugin]['dest'],
+            releasePaths = plugins[plugin]['release'],
             pluginsTasks = ['Content', 'Language'],
             pluginMainTask = `Plugin${plugin}`;
 
         cleanPlugins.push(`cleanPlugin${plugin}`);
         copyPlugins.push(`copyPlugin${plugin}`);
         watchPlugins.push(`watchPlugin${plugin}`);
+        releasePlugins.push(`releasePlugin${plugin}`);
 
         for (index in pluginsTasks) {
             let taskName = `${pluginMainTask}${pluginsTasks[index]}`;
@@ -29,6 +36,7 @@ if (plugins) {
             cleanPluginExtName[index] = `clean${taskName}`;
             copyPluginExtName[index] = `copy${taskName}`;
             watchPluginExtName[index] = `watch${taskName}`;
+            releasePluginExtName[index] = `release${taskName}`;
         }
 
         // clean tasks
@@ -90,10 +98,23 @@ if (plugins) {
         gulp.task(`watch${pluginMainTask}`,
             gulp.parallel(...watchPluginExtName)
         );
+
+        // Plugin release
+        let manifestPath = `${releasePaths['src']}${releasePaths['extName']}.xml`;
+
+        if (fs.existsSync(manifestPath))
+            pluginVersion = utils.getXmlElement('version', manifestPath);
+
+        gulp.task(`release${pluginMainTask}`, function () {
+            return gulp.src(`${releasePaths['src']}/**`)
+                .pipe(GulpZip(`plg_${releasePaths['extGroup']}_${releasePaths['extName']}.v${pluginVersion}.zip`))
+                .pipe(gulp.dest(releasePaths['dest']));
+        });
     }
 
     // Plugins Main Tasks
     gulp.task(`cleanPlugins`, gulp.parallel(...cleanPlugins));
     gulp.task(`copyPlugins`, gulp.parallel(...copyPlugins));
     gulp.task(`watchPlugins`, gulp.parallel(...watchPlugins));
+    gulp.task(`releasePlugins`, gulp.parallel(...releasePlugins));
 }

@@ -26,6 +26,10 @@ Una vez termine la instalación de paquetes debes realizar un par de configuraci
 
 ## ¿Como configurar?
 
+Principalmente deberás crear y configurar dos archivos, empezando siempre por **config.json**.
+
+El comando `npm run info` muestra en pantalla una pequeña guía de configuración, informando de la posible falta de datos y mostrando rutas importantes en la configuración.
+
 Verás que dentro del repositorio existen dos ficheros con la extension `.dist` que son `config.json.dist` y `extensions-config.json.dist`.
 
 ### config.json.dist

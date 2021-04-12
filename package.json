@@ -4,7 +4,9 @@
   "description": "Código para copiar ficheros de joomla a la extension instalable",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp",
+    "tasks": "gulp --tasks",
+    "info": "node src/info"
   },
   "author": "Maikol Fustes",
   "license": "ISC",
@@ -14,6 +16,13 @@
     "gulp": "^4.0.2",
     "gulp-clean": "^0.4.0",
     "gulp-debug": "^4.0.0",
-    "path": "^0.12.7"
+    "gulp-zip": "^5.1.0",
+    "path": "^0.12.7",
+    "xml-query": "^1.5.0",
+    "xml-reader": "^2.4.3"
+  },
+  "dependencies": {
+    "boxen": "^5.0.1",
+    "log-beautify": "^1.2.0"
   }
 }

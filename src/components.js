@@ -3,11 +3,17 @@ const capitalize = require('capitalize');
 const {
     components
 } = require('./folderNames');
-const clean = require('gulp-clean');
+
+const utils = require('./utils');
+
+const clean = require('gulp-clean'),
+    zip = require('gulp-zip'),
+    fs = require('fs');
 
 const copyComponents = [],
     cleanComponents = [],
-    watchComponents = [];
+    watchComponents = [],
+    releaseComponents = [];
 
 for (component in components) {
     let cExtName = capitalize(component),
@@ -18,16 +24,20 @@ for (component in components) {
         types = ['Admin', 'Site', 'Media', 'Manifest', 'AdminLanguage', 'SiteLanguage'],
         copyComponentExtName = [],
         cleanComponentExtName = [],
-        watchComponentExtName = [];
+        watchComponentExtName = [],
+        releaseComponentExtName = [];
 
     copyComponents.push(`copyComponent${cExtName}`);
     cleanComponents.push(`cleanComponent${cExtName}`);
     watchComponents.push(`watchComponent${cExtName}`);
+    releaseComponents.push(`releaseComponent${cExtName}`);
 
     for (index in types) {
         copyComponentExtName[index] = `copyComponent${cExtName}${types[index]}`;
         cleanComponentExtName[index] = `cleanComponent${cExtName}${types[index]}`;
         watchComponentExtName[index] = `watchComponent${cExtName}${types[index]}`;
+        releaseComponentExtName[index] = `releaseComponent${cExtName}${types[index]}`;
+    }
 
         // clean tasks
 
@@ -178,7 +188,7 @@ for (component in components) {
             return gulp.watch(srcPaths['SiteLanguage'], gulp.series(`copyComponent${cExtName}SiteLanguage`))
         });
 
-    }
+
 
     gulp.task(`cleanComponent${cExtName}`,
         gulp.series(...cleanComponentExtName)
@@ -192,8 +202,21 @@ for (component in components) {
         gulp.parallel(...watchComponentExtName)
     );
 
+    // Component release
+    let manifestPath = `${destPaths['Manifest']}${component}.xml`;
+
+    if(fs.existsSync(manifestPath))
+        componentVersion = utils.getXmlElement('version', manifestPath);
+
+    gulp.task(`releaseComponent${cExtName}`, function () {
+        return gulp.src(`${destPaths['root']}/**`)
+            .pipe(zip(`com_${component}.v${componentVersion}.zip`))
+            .pipe(gulp.dest(destPaths['Release']));
+    });
+
 }
 
 gulp.task(`cleanComponents`, gulp.parallel(...cleanComponents));
 gulp.task(`copyComponents`, gulp.parallel(...copyComponents));
 gulp.task(`watchComponents`, gulp.parallel(...watchComponents));
+gulp.task('releaseComponents', gulp.parallel(...releaseComponents));

@@ -10,6 +10,7 @@ var modules = utils.getModules();
 
 
 var destRoot = `${config.destDir}/${config.extName}/extension`,
+    releaseRoot = `${config.releaseDir}`,
     srcRoot = `${config.srcDir}`;
 
 const getRelativePaths = (extensions) => {
@@ -51,9 +52,11 @@ if (components) {
             componentsData[componentName]['clean'][`${dests[index]}`] = `${destRoot}/components/${componentName}/${dest}/`;
         }
 
+        componentsData[componentName]['dest']['root'] = `${destRoot}/components/${componentName}/`;
         componentsData[componentName]['dest']['AdminLanguage'] = `${componentsData[componentName]['dest']['Admin']}/language/`;
         componentsData[componentName]['dest']['SiteLanguage'] = `${componentsData[componentName]['dest']['Site']}/language/`;
         componentsData[componentName]['dest']['Manifest'] = `${destRoot}/components/${componentName}/`;
+        componentsData[componentName]['dest']['Release'] = `${releaseRoot}/components/${componentName}/`;
 
         // Components clear folders
         componentsData[componentName]['clean']['AdminLanguage'] = `${componentsData[componentName]['clean']['Admin']}/language/`;
@@ -90,18 +93,24 @@ if (plugins) {
             group_pluginName = `${groupName}_${pluginName}`,
             groupPluginNameCamelCase = capitalize(groupName) + capitalize(pluginName);
 
-            pluginsData[groupPluginNameCamelCase] = [];
-            pluginsData[groupPluginNameCamelCase]['dest'] = [];
-            pluginsData[groupPluginNameCamelCase]['src'] = [];
+        pluginsData[groupPluginNameCamelCase] = [];
+        pluginsData[groupPluginNameCamelCase]['dest'] = [];
+        pluginsData[groupPluginNameCamelCase]['src'] = [];
+        pluginsData[groupPluginNameCamelCase]['release'] = [];
 
         pluginsData[groupPluginNameCamelCase]['dest']['Content'] = (`${destRoot}/plugins/${pluginPath}/`);
         pluginsData[groupPluginNameCamelCase]['dest']['Language'] = (`${destRoot}/plugins/${pluginPath}/language/`);
 
         pluginsData[groupPluginNameCamelCase]['src']['Content'] = [
-                `${srcRoot}/plugins/${pluginPath}/**/*.*`,
-                `!${srcRoot}/plugins/${pluginPath}/language/**`,
+            `${srcRoot}/plugins/${pluginPath}/**/*.*`,
+            `!${srcRoot}/plugins/${pluginPath}/language/**`,
         ];
         pluginsData[groupPluginNameCamelCase]['src']['Language'] = `${srcRoot}/administrator/language/**/*.plg_${group_pluginName}.*`;
+
+        pluginsData[groupPluginNameCamelCase]['release']['extName'] = pluginName;
+        pluginsData[groupPluginNameCamelCase]['release']['extGroup'] = groupName;
+        pluginsData[groupPluginNameCamelCase]['release']['src'] = `${destRoot}/plugins/${pluginPath}/`;
+        pluginsData[groupPluginNameCamelCase]['release']['dest'] = `${releaseRoot}/plugins/${pluginPath}/`;
     }
 
     exports.plugins = pluginsData;
@@ -124,6 +133,7 @@ if (modules) {
         modulesData[clientModuleNameCamelCase] = [];
         modulesData[clientModuleNameCamelCase]['dest'] = [];
         modulesData[clientModuleNameCamelCase]['src'] = [];
+        modulesData[clientModuleNameCamelCase]['release'] = [];
 
         modulesData[clientModuleNameCamelCase]['dest']['Content'] = `${destRoot}/modules/${destModulePath}/`;
         modulesData[clientModuleNameCamelCase]['dest']['Language'] = `${destRoot}/modules/${destModulePath}/language/`;

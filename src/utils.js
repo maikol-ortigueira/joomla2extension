@@ -3,8 +3,13 @@ const {
     srcDir,
     destDir
 } = require('../config.json');
-const fs = require('fs');
+var fs = require('fs'),
+    xmlQuery = require('xml-query'),
+    xmlReader = require('xml-reader');
+
 const path = require('path');
+const log = require('log-beautify');
+
 var configPath = path.join(__dirname, '..');
 
 if (extName == 'undefined' || extName == '') {
@@ -22,7 +27,7 @@ if (!fs.existsSync(`${destDir}/${extName}/extensions-config.json`)) {
     console.error('\x1b[1m\x1b[33m=============================================================================================== ');
     console.error("\x1b[37m|\n|   \x1b[31m¡¡Error!!\x1b[37m   Falta el fichero de configuración de la extensión\n|");
     console.error("|   Debes crear un fichero con el nombre \"\x1b[32mextensions-config.json\x1b[37m\" en la siguiente carpeta:\n|")
-    console.error("|   \x1b[32m"+`${destDir}/${extName}/`);
+    console.error("|   \x1b[32m" + `${destDir}/${extName}/`);
     console.error("\x1b[37m|\n|   Puedes copiar, pegar y sustituir los valores del fichero \"extension-config.json.dist\".");
     console.error("|   Deberás renombrarlo eliminando la extension \".dist\"\n|");
     console.error('\x1b[33m===============================================================================================\x1b[0m');
@@ -39,7 +44,7 @@ const hasComponents = () => {
 }
 
 const getComponentsNames = () => {
-    if (hasComponents()){
+    if (hasComponents()) {
         return extConfig.components;
     }
     return false;
@@ -53,7 +58,7 @@ const hasPackages = () => {
 }
 
 const getPackageName = () => {
-    if(hasPackages()){
+    if (hasPackages()) {
         return extConfig.package;
     }
     return false;
@@ -75,7 +80,7 @@ const hasPlugins = () => {
 }
 
 const getPlugins = () => {
-    if (hasPlugins()){
+    if (hasPlugins()) {
         return extConfig.plugins;
     }
     return false;
@@ -97,10 +102,25 @@ const hasModules = () => {
 }
 
 const getModules = () => {
-    if(hasModules()){
+    if (hasModules()) {
         return extConfig.modules;
     }
     return false;
+}
+
+/**
+ *
+ * @param {string} element The element to retrieve
+ * @param {string} file the file absolute path
+ * @returns {string}
+ */
+const getXmlElement = (element, file) => {
+    var xml = fs.readFileSync(file, 'utf-8');
+
+    var ast = xmlReader.parseSync(xml);
+    var xq = xmlQuery(ast);
+
+    return xq.find(element).text();
 }
 
 module.exports = {
@@ -111,5 +131,6 @@ module.exports = {
     hasPlugins,
     getPlugins,
     hasModules,
-    getModules
+    getModules,
+    getXmlElement
 }

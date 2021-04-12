@@ -1,12 +1,12 @@
 {
-    "components": ["nombre_del_componente"],
+    "components": [""],
     "plugins": {
-        "system": ["nombre_del_plugin_de_sistema", "otro_nombre_distinto_de_plugin_de_sistema"],
-        "content": ["nombre_del_plugin_de_contenido"]
+        "system": [],
+        "content": []
     },
     "modules": {
-        "site": ["todavia_no_implementado"],
-        "admin": ["todavia_no_implementado"]
+        "site": [],
+        "admin": []
     },
-    "package": "un_nombre_para_el_paquete_opcional_y_solo_uno"
+    "package": ""
 }
