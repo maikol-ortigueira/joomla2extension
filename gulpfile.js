@@ -3,6 +3,7 @@
 
     gulp.task('clean', gulp.series(...tareas.cleanTasks));
     gulp.task('copy', gulp.series(...tareas.copyTasks));
+    gulp.task('release', gulp.series(...tareas.releaseTasks));
     gulp.task('watch', gulp.parallel(...tareas.watchTasks));
 
-    gulp.task('default', gulp.series('clean', 'copy', 'watch'));
+    gulp.task('default', gulp.series('clean', 'copy'));

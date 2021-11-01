@@ -140,6 +140,12 @@ if (modules) {
 
         modulesData[clientModuleNameCamelCase]['src']['Content'] = [`${srcRoot}/${srcModulePath}/**/*.*`, `!${srcRoot}/${srcModulePath}/language/**`];
         modulesData[clientModuleNameCamelCase]['src']['Language'] = `${srcRoot}/${srcModuleLanguagePath}/**/*.mod_${moduleName}.*`;
+
+        modulesData[clientModuleNameCamelCase]['release']['extName'] = moduleName;
+        modulesData[clientModuleNameCamelCase]['release']['client'] = splitedModuleName[0];
+        modulesData[clientModuleNameCamelCase]['release']['src'] = `${destRoot}/modules/${destModulePath}/`;
+        modulesData[clientModuleNameCamelCase]['release']['dest'] = `${releaseRoot}/modules/${destModulePath}/`;
+
     }
 
     exports.modules = modulesData;
