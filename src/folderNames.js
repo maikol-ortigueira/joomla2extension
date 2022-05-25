@@ -69,9 +69,9 @@ if (components) {
             `${srcRoot}/administrator/components/com_${componentName}/**/*.*`,
             `!${srcRoot}/administrator/components/com_${componentName}/${componentName}.xml`
         ];
-        componentsData[componentName]['src']['AdminLanguage'] = (`${srcRoot}/administrator/language/**/*.com_${componentName}.*`);
+        componentsData[componentName]['src']['AdminLanguage'] = (`${srcRoot}/administrator/language/**/*com_${componentName}.*`);
         componentsData[componentName]['src']['Site'] = (`${srcRoot}/components/com_${componentName}/**/*.*`);
-        componentsData[componentName]['src']['SiteLanguage'] = (`${srcRoot}/language/**/*.com_${componentName}.*`);
+        componentsData[componentName]['src']['SiteLanguage'] = (`${srcRoot}/language/**/*com_${componentName}.*`);
         componentsData[componentName]['src']['Media'] = (`${srcRoot}/media/com_${componentName}/**/*.*`);
         componentsData[componentName]['src']['Manifest'] = `${srcRoot}/administrator/components/com_${componentName}/${componentName}.xml`;
     }

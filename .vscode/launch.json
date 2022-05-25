@@ -11,7 +11,7 @@
             "skipFiles": [
                 "<node_modules>/**"
             ],
-            "program": "${workspaceFolder}/gulpfile.js"
+            "program": "${workspaceFolder}/src/prueba.js"
         }
     ]
 }

@@ -1,1 +1,2 @@
-require('./src/info');
+//require('./src/info');
+require('./src/template')

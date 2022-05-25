@@ -23,16 +23,16 @@ if (extName == 'undefined' || extName == '') {
     return false;
 }
 
-if (!fs.existsSync(`${destDir}/${extName}/extensions-config.json`)) {
+if (!fs.existsSync(`${destDir}/extensions-config.json`)) {
     console.error('\x1b[1m\x1b[33m=============================================================================================== ');
     console.error("\x1b[37m|\n|   \x1b[31m¡¡Error!!\x1b[37m   Falta el fichero de configuración de la extensión\n|");
     console.error("|   Debes crear un fichero con el nombre \"\x1b[32mextensions-config.json\x1b[37m\" en la siguiente carpeta:\n|")
-    console.error("|   \x1b[32m" + `${destDir}/${extName}/`);
+    console.error("|   \x1b[32m" + `${destDir}/`);
     console.error("\x1b[37m|\n|   Puedes copiar, pegar y sustituir los valores del fichero \"extension-config.json.dist\".");
     console.error("|   Deberás renombrarlo eliminando la extension \".dist\"\n|");
     console.error('\x1b[33m===============================================================================================\x1b[0m');
 }
-const extConfig = require(`${destDir}/${extName}/extensions-config.json`);
+const extConfig = require(`${destDir}/extensions-config.json`);
 
 
 const hasComponents = () => {
@@ -46,6 +46,21 @@ const hasComponents = () => {
 const getComponentsNames = () => {
     if (hasComponents()) {
         return extConfig.components;
+    }
+    return false;
+}
+
+const hasFiles = () => {
+    return (
+        extConfig.hasOwnProperty('files') &&
+        extConfig.files.length > 0 &&
+        extConfig.files[0] != ''
+    );
+}
+
+const getFilesNames = () => {
+    if (hasComponents()) {
+        return extConfig.files;
     }
     return false;
 }
@@ -108,6 +123,21 @@ const getModules = () => {
     return false;
 }
 
+const hasTemplates = () => {
+    return (
+        extConfig.hasOwnProperty('templates') &&
+        extConfig.templates.length > 0 &&
+        extConfig.templates[0] != ''
+    );
+}
+
+const getTemplatesName = () => {
+    if (hasTemplates()) {
+        return extConfig.templates;
+    }
+    return false;
+}
+
 /**
  *
  * @param {string} element The element to retrieve
@@ -123,14 +153,98 @@ const getXmlElement = (element, file) => {
     return xq.find(element).text();
 }
 
+const limpiarRuta = (ruta) => {
+    ruta = ruta.charAt(ruta.length - 1) == '/' ? ruta.toLowerCase() : ruta.toLowerCase() + '/';
+    return ruta;
+}
+
+const getManisfestFiles = (files, rutaDesde) => {
+    let ficheros = [];
+    if (files[0].filename === undefined) {
+        return ficheros;
+    }
+    files[0].filename.forEach(file => {
+        if (file['_'] !== undefined) {
+            file = file['_']
+        }
+        ficheros.push(`${rutaDesde}${file}`)
+    });
+
+    return ficheros;
+}
+
+const getManisfestFolders = (files, rutaDesde) => {
+    let carpetas = [];
+    if (files[0].folder === undefined) {
+        return carpetas;
+    }
+    files[0].folder.forEach(folder => {
+        carpetas.push(`${rutaDesde}${folder}/**/*.*`)
+    });
+
+    return carpetas;
+}
+
+const getManifestLanguages = (languages, rutaLanguageDesde, folder = '') => {
+    let idiomas = [];
+    let lngs = languages[0].language;
+    if (lngs === undefined) {
+        return idiomas;
+    }
+
+    if (folder === '') {
+        folder = languages[0].$.folder;
+    }
+
+    var tags = [];
+    lngs.forEach(l => {
+        if (!tags.includes(l.$.tag))
+        {
+            tags.push(l.$.tag)
+        }
+    })
+    tags.forEach(t => {
+        idiomas[t] = {
+            "files" : [],
+            "destFolder": ''
+        }
+    })
+
+    lngs.forEach(l => {
+        let langArray = l['_'].split('/');
+        let file = langArray.pop();
+        let destFolder = folder + '/' + langArray.join('/');
+        idiomas[l.$.tag].files.push(file);
+        idiomas[l.$.tag].destFolder = destFolder;
+    })
+
+    let fullnames = [];
+    
+    for (const lang in idiomas) {
+        idiomas[lang].files.forEach(file => {
+            fullnames.push(`${rutaLanguageDesde}${lang}/${file}`)
+        })
+    }
+    
+    return fullnames;
+}
+
 module.exports = {
     hasComponents,
     getComponentsNames,
+    hasFiles,
+    getFilesNames,
     hasPackages,
     getPackageName,
     hasPlugins,
     getPlugins,
     hasModules,
     getModules,
-    getXmlElement
+    hasTemplates,
+    getTemplatesName,
+    getXmlElement,
+    limpiarRuta,
+    getManisfestFiles,
+    getManisfestFolders,
+    getManifestLanguages
 }

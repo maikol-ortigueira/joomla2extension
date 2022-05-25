@@ -1,12 +1,10 @@
+const Package = require('./Package');
 const utils = require('./utils');
-const gulp = require('gulp');
 
 var cleanTasks = []
     copyTasks = [],
     releaseTasks = [],
     watchTasks = [];
-
-var comp = utils.hasComponents();
 
 if (utils.hasComponents()) {
     var componentsTasks = require('./components');
@@ -15,7 +13,6 @@ if (utils.hasComponents()) {
     cleanTasks.push('cleanComponents');
     copyTasks.push('copyComponents');
     releaseTasks.push('releaseComponents');
-    watchTasks.push('watchComponents');
 }
 
 if (utils.hasPlugins()) {
@@ -25,7 +22,6 @@ if (utils.hasPlugins()) {
     cleanTasks.push('cleanPlugins');
     copyTasks.push('copyPlugins');
     releaseTasks.push('releasePlugins');
-    watchTasks.push('watchPlugins');
 }
 
 if (utils.hasModules()) {
@@ -35,10 +31,34 @@ if (utils.hasModules()) {
     cleanTasks.push('cleanModules');
     copyTasks.push('copyModules');
     releaseTasks.push('releaseModules');
-    watchTasks.push('watchModules');
+}
+
+if (utils.hasTemplates()) {
+    const templateTasks = require('./templates')
+
+    // Add tasks to gulp main tasks
+    cleanTasks.push('cleanTemplates');
+    copyTasks.push('copyTemplates');
+    releaseTasks.push('releaseTemplates');
+}
+
+if (utils.hasFiles()) {
+    const filesTasks = require('./files');
+
+    // Add tasks to gulp main tasks
+    cleanTasks.push('cleanFiles');
+    copyTasks.push('copyFiles');
+    releaseTasks.push('releaseFiles');
+}
+
+if (utils.hasPackages()) {
+    let name = utils.getPackageName();
+    let pkg = new Package(name);
+    cleanTasks.push(pkg.cleanTask);
+    copyTasks.push(pkg.copyTask);
+    releaseTasks.push(pkg.releaseTask);
 }
 
 exports.cleanTasks = cleanTasks;
 exports.copyTasks = copyTasks;
 exports.releaseTasks = releaseTasks;
-exports.watchTasks = watchTasks;
