@@ -1,4 +1,4 @@
-const { hasComponents, getComponentsNames, hasFiles, getFilesNames, hasPlugins, getPlugins, hasTemplates, getTemplatesName, limpiarRuta, hasModules, getModules } = require("./utils");
+const { hasComponents, getComponentsNames, hasFiles, getFilesNames, hasPlugins, getPlugins, hasTemplates, getTemplatesName, limpiarRuta, hasModules, getModules, getPackageName, getDefault, getFecha } = require("./utils");
 const { srcDir, destDir, releaseDir } = require('../config.json');
 const Component = require("./Component");
 const Archivo = require("./Archivo")
@@ -14,14 +14,17 @@ const Modulo = require("./Modulo");
 
 class Package {
 
-    constructor(nombre) {
-        this.nombre = nombre.toLowerCase();
+    constructor() {
+        this.package = getPackageName();
+        this.nombre = this.package.name.toLowerCase();
         this.extensionVersion = '4.0';
         this.name = `PKG_${this.nombre.toUpperCase()}`
-        this.author = 'Altia';
-        this.creationDate = `Mayo 2022`;
-        this.packagename = `Paquete de extensiones - Datos Abiertos Tenerife`;
-        this.version = `0.6.0`
+        this.author = getDefault(this.package.author, 'Maikol Fustes')
+        let fechaHoy = getFecha();
+        let mesAnoHoy = `${fechaHoy.mes} ${fechaHoy.ano}`
+        this.creationDate = getDefault(this.package.creationDate, mesAnoHoy);
+        this.packagename = getDefault(this.package.packagename, this.package.name)
+        this.version = getDefault(this.package.version, '1.0.0')
         this.description = `PKG_${this.nombre.toUpperCase()}_DESC`;
         this.files = [];
         this.zipFiles = [];
@@ -46,6 +49,7 @@ class Package {
 
         if (hasFiles) {
             let archivos = getFilesNames();
+
              archivos.forEach(name => {
                  let f = new Archivo(name);
                  this.zipFiles.push(`${f.releaseDest}${f.zipFileName}`);
@@ -55,6 +59,7 @@ class Package {
 
         if (hasTemplates) {
             let tmps = getTemplatesName();
+
             tmps.forEach(name => {
                 let t = new Template(name);
                 this.zipFiles.push(`${t.releaseDest}${t.zipFileName}`);
