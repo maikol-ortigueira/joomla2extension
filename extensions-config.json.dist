@@ -3,10 +3,23 @@
     "plugins": {
         "system": [],
         "content": []
-    },
+    }.
     "modules": {
         "site": [],
         "admin": []
     },
-    "package": ""
+    "templates": {
+        "site": [],
+        "admin": []
+    },
+    "files": [],
+    "package": {
+        "name": "",
+        "packagename": "",
+        "creationDate": "",
+        "label": "",
+        "description": "",
+        "version": "1.0.0",
+        "author": "",
+    }
 }
