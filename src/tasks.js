@@ -52,8 +52,7 @@ if (utils.hasFiles()) {
 }
 
 if (utils.hasPackages()) {
-    let name = utils.getPackageName();
-    let pkg = new Package(name);
+    let pkg = new Package();
     cleanTasks.push(pkg.cleanTask);
     copyTasks.push(pkg.copyTask);
     releaseTasks.push(pkg.releaseTask);
