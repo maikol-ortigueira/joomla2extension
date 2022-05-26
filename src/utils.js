@@ -36,11 +36,11 @@ const extConfig = require(`${destDir}/extensions-config.json`);
 
 
 const hasComponents = () => {
-    return (
-        extConfig.hasOwnProperty('components') &&
+    let hasComponents = extConfig.hasOwnProperty('components') &&
         extConfig.components.length > 0 &&
         extConfig.components[0] != ''
-    );
+
+    return hasComponents
 }
 
 const getComponentsNames = () => {
@@ -59,16 +59,13 @@ const hasFiles = () => {
 }
 
 const getFilesNames = () => {
-    if (hasComponents()) {
-        return extConfig.files;
-    }
-    return false;
+    return extConfig.files;
 }
 
 const hasPackages = () => {
     return (
         extConfig.hasOwnProperty('package') &&
-        extConfig.package != ''
+        extConfig.package.name != ''
     );
 }
 
@@ -132,10 +129,7 @@ const hasTemplates = () => {
 }
 
 const getTemplatesName = () => {
-    if (hasTemplates()) {
-        return extConfig.templates;
-    }
-    return false;
+    return extConfig.templates;
 }
 
 /**
@@ -198,14 +192,13 @@ const getManifestLanguages = (languages, rutaLanguageDesde, folder = '') => {
 
     var tags = [];
     lngs.forEach(l => {
-        if (!tags.includes(l.$.tag))
-        {
+        if (!tags.includes(l.$.tag)) {
             tags.push(l.$.tag)
         }
     })
     tags.forEach(t => {
         idiomas[t] = {
-            "files" : [],
+            "files": [],
             "destFolder": ''
         }
     })
@@ -219,14 +212,29 @@ const getManifestLanguages = (languages, rutaLanguageDesde, folder = '') => {
     })
 
     let fullnames = [];
-    
+
     for (const lang in idiomas) {
         idiomas[lang].files.forEach(file => {
             fullnames.push(`${rutaLanguageDesde}${lang}/${file}`)
         })
     }
-    
+
     return fullnames;
+}
+
+const getDefault = (busca, predeterminado) => {
+    return busca !== undefined && busca !== '' ? busca : predeterminado
+}
+
+const getFecha = (local = 'es-ES') => {
+    let hoy = new Date()
+
+    let fecha = {};
+    fecha.dia = hoy.toLocaleDateString(local, { day: 'numeric' })
+    fecha.mes = hoy.toLocaleDateString(local, { month: 'long' })
+    fecha.ano = hoy.toLocaleDateString(local, { year: 'numeric' })
+
+    return fecha
 }
 
 module.exports = {
@@ -246,5 +254,7 @@ module.exports = {
     limpiarRuta,
     getManisfestFiles,
     getManisfestFolders,
-    getManifestLanguages
+    getManifestLanguages,
+    getDefault,
+    getFecha
 }
