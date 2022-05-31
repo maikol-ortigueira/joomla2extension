@@ -1,19 +1,20 @@
 const Template = require("./Template");
-const { hasTemplates, getTemplatesName } = require("./utils");
+const { getTemplates } = require("./utils");
 const { task, parallel } = require("gulp");
 
-if (hasTemplates) {
-    const templates = getTemplatesName();
+if (getTemplates !== false) {
+    const templates = getTemplates();
     let cleanTemplates = [], copyTemplates = [], releaseTemplates = [];
 
-    templates.forEach(template => {
+    for (let client in templates) {
+        templates[client].forEach(name => {
+            let temp = new Template(name, client)
 
-        let tmpl = new Template(template, 'site');
-
-        cleanTemplates.push(tmpl.cleanTask);
-        copyTemplates.push(tmpl.copyTask);
-        releaseTemplates.push(tmpl.releaseTask);
-    });
+            cleanTemplates.push(temp.cleanTask)
+            copyTemplates.push(temp.copyTask)
+            releaseTemplates.push(temp.releaseTask)
+        })
+    }
 
     task(`cleanTemplates`, parallel(...cleanTemplates));
     task(`copyTemplates`, parallel(...copyTemplates));

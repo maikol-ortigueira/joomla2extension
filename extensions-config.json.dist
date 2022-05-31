@@ -3,7 +3,7 @@
     "plugins": {
         "system": [],
         "content": []
-    }.
+    },
     "modules": {
         "site": [],
         "admin": []
@@ -20,6 +20,6 @@
         "label": "",
         "description": "",
         "version": "1.0.0",
-        "author": "",
+        "author": ""
     }
 }

@@ -1,8 +1,8 @@
     const tareas = require('./src/tasks');
-    const gulp = require('gulp');
+    const {task, series} = require('gulp')
 
-    gulp.task('clean', gulp.series(...tareas.cleanTasks));
-    gulp.task('copy', gulp.series(...tareas.copyTasks));
-    gulp.task('release', gulp.series(...tareas.releaseTasks));
+    task('clean', series(...tareas.cleanTasks));
+    task('copy', series(...tareas.copyTasks));
+    task('release', series(...tareas.releaseTasks));
 
-    gulp.task('default', gulp.series('clean', 'copy', 'release'));
+    task('default', series('clean', 'copy', 'release'));

@@ -1,4 +1,4 @@
-const { hasComponents, getComponentsNames, hasFiles, getFilesNames, hasPlugins, getPlugins, hasTemplates, getTemplatesName, limpiarRuta, hasModules, getModules, getPackageName, getDefault, getFecha } = require("./utils");
+const { hasComponents, getComponentsNames, hasFiles, getFilesNames, hasPlugins, getPlugins, hasTemplates, getTemplates, limpiarRuta, hasModules, getModules, getPackageName, getDefault, getFecha } = require("./utils");
 const { srcDir, destDir, releaseDir } = require('../config.json');
 const Component = require("./Component");
 const Archivo = require("./Archivo")
@@ -58,13 +58,19 @@ class Package {
         }
 
         if (hasTemplates) {
-            let tmps = getTemplatesName();
+            let templates = getTemplates();
 
-            tmps.forEach(name => {
-                let t = new Template(name);
-                this.zipFiles.push(`${t.releaseDest}${t.zipFileName}`);
-                this.files.push(this.parseTemplageElementFile(name, t.zipFileName, 'site'));
-            })
+            for (const client in templates) {
+                let tmps = templates[client]
+                if (tmps.length > 0) {
+                    tmps.forEach(name => {
+                        let template = new Template(name, client)
+                        this.zipFiles.push(`${template.releaseDest}${template.zipFileName}`)
+                        this.files.push(this.parseTemplageElementFile(name, template.zipFileName, client))
+                    })
+                }
+            }
+
         }
 
         if (hasPlugins) {

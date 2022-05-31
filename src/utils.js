@@ -121,15 +121,27 @@ const getModules = () => {
 }
 
 const hasTemplates = () => {
-    return (
-        extConfig.hasOwnProperty('templates') &&
-        extConfig.templates.length > 0 &&
-        extConfig.templates[0] != ''
-    );
+    if (extConfig.hasOwnProperty('templates')) {
+        let clients = extConfig.templates
+        for (let client in clients) {
+            if (
+                extConfig.templates[client].length > 0 &&
+                extConfig.templates[client][0] != ''
+            ) {
+                return true
+            }
+        }
+
+        return false;
+    }
 }
 
-const getTemplatesName = () => {
-    return extConfig.templates;
+const getTemplates = () => {
+    if (hasTemplates()) {
+        return extConfig.templates
+    }
+
+    return false;
 }
 
 /**
@@ -249,7 +261,7 @@ module.exports = {
     hasModules,
     getModules,
     hasTemplates,
-    getTemplatesName,
+    getTemplates,
     getXmlElement,
     limpiarRuta,
     getManisfestFiles,
