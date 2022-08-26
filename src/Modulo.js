@@ -19,7 +19,7 @@ class Modulo {
         this.cNombre = capitalize(nombre)
         cliente = cliente.toLowerCase()
         this.cliente = cliente == 'site' ? cliente : 'admin';
-        let clienteDesde = this.client === 'site' ? '' : 'administrator/'
+        let clienteDesde = this.cliente === 'site' ? '' : 'administrator/'
 
         let manifest = new Manifest(ruta, 'module', nombre, this.cliente)
         this.manifiesto = manifest.manifiesto;

@@ -1,5 +1,5 @@
 const { hasComponents, getComponentsNames, hasFiles, getFilesNames, hasPlugins, getPlugins, hasTemplates, getTemplates, limpiarRuta, hasModules, getModules, getPackageName, getDefault, getFecha } = require("./utils");
-const { srcDir, destDir, releaseDir } = require('../config.json');
+const { srcDir, destDir, releaseDir, packageDest } = require('../config.json');
 const Component = require("./Component");
 const Archivo = require("./Archivo")
 const js2xml = require('js2xmlparser');
@@ -34,8 +34,8 @@ class Package {
         let destinoRelease = releaseDir.charAt(releaseDir.length - 1) == '/' ? releaseDir : releaseDir + '/';
         this.releaseDest = destinoRelease + 'packages/' + this.nombre + '/';
 
-        let destino = destDir.charAt(destDir.length - 1) == '/' ? destDir : destDir + '/';
-        this.destino = `${destino}packages/${this.nombre}/`
+        let destino = packageDest.charAt(packageDest.length - 1) == '/' ? packageDest : packageDest + '/';
+        this.destino = destino
 
         if (hasComponents) {
             let components = getComponentsNames();

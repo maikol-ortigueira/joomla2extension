@@ -263,10 +263,11 @@ class Component {
             let long = this.srcAdminPathArrayLong;
 
             task(`copyComponentAdminFolders${this.cNombre}`, function() {
+                let destinoF = ''
                 return src(folders, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
                     let destFolderName = file.path.replace(/^\/+|\/+$/g, '').split('/')[long];
-                    let destinoF = `${destino}${destFolderName}/`;
+                    destinoF = `${destino}${destFolderName}/`;
                     return stream
                     .pipe(dest(destinoF))
                 }))
