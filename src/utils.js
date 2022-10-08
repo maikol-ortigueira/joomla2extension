@@ -34,7 +34,6 @@ if (!fs.existsSync(`${destDir}/extensions-config.json`)) {
 }
 const extConfig = require(`${destDir}/extensions-config.json`);
 
-
 const hasComponents = () => {
     let hasComponents = extConfig.hasOwnProperty('components') &&
         extConfig.components.length > 0 &&
@@ -46,6 +45,21 @@ const hasComponents = () => {
 const getComponentsNames = () => {
     if (hasComponents()) {
         return extConfig.components;
+    }
+    return false;
+}
+
+const hasLibraries = () => {
+    let hasLibraries = extConfig.hasOwnProperty('libraries') &&
+        extConfig.libraries.length > 0 &&
+        extConfig.libraries[0] != ''
+
+    return hasLibraries
+}
+
+const getLibrariesNames = () => {
+    if (hasLibraries()) {
+        return extConfig.libraries;
     }
     return false;
 }
@@ -252,6 +266,8 @@ const getFecha = (local = 'es-ES') => {
 module.exports = {
     hasComponents,
     getComponentsNames,
+    hasLibraries,
+    getLibrariesNames,
     hasFiles,
     getFilesNames,
     hasPackages,

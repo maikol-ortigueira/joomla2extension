@@ -1,6 +1,6 @@
 const Manifest = require("./Manifest");
 const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages } = require("./utils");
-const { destDir, srcDir, releaseDir } = require('../config.json');
+const { destDir, srcDir, releaseDir, backupDir } = require('../config.json');
 const capitalize = require("capitalize");
 const { task, src, dest, series } = require("gulp");
 const clean = require('gulp-clean');
@@ -84,6 +84,12 @@ class Template {
         return `${destDir}/templates/${this.nombre}/`;
     }
 
+    get destBackup() {
+        backupDir.charAt(backupDir.length - 1) == '/' ? backupDir : backupDir + '/';
+        let cliente = this.cliente === 'admin' ? this.cliente : 'site';
+        return `${backupDir}/templates/${cliente}/${this.nombre}/`;
+    }
+
     get zipFileName() {
         return `tpl_${this.nombre}.v${this.version}.zip`;
     }
@@ -126,6 +132,35 @@ class Template {
         task(`copyTemplate${this.cNombre}`, series(...this.copyTemplate));
 
         return `copyTemplate${this.cNombre}`;
+    }
+
+    get cleanBackupTask() {
+        let destino = this.destBackup + this.cliente
+        task(`cleanTemplateBackup${this.cNombre}`, function (cb) {
+            return src(destino, {
+                read: false,
+                allowEmpty: true
+            })
+                .pipe(clean({ force: true }));
+            cb();
+        });
+
+        return `cleanTemplateBackup${this.cNombre}`;
+
+    }
+
+    get backupTask() {
+        this.cleanBackupTask;
+        
+        let origen = this.destino + '**/*.*'
+        let destino = this.destBackup + this.cliente;
+
+        task (`backupTemplate${this.cNombre}`, series(`cleanTemplateBackup${this.cNombre}`, () => {
+            return src(origen, { allowEmpty:true })
+                .pipe(dest(destino))
+        }))
+
+        return `backupTemplate${this.cNombre}`;
     }
 
     get releaseTask() {

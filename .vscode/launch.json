@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "pwa-node",
+            "type": "node",
             "request": "launch",
             "name": "Launch Gulp Joomla2Extension",
             "skipFiles": [
                 "<node_modules>/**"
             ],
-            "program": "${workspaceFolder}/src/prueba.js"
+            "program": "${workspaceFolder}/gulpfile.js"
         }
     ]
 }

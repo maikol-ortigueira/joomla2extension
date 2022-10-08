@@ -1,4 +1,4 @@
-const { srcDir, destDir, releaseDir } = require('../config.json');
+const { srcDir, destDir, releaseDir, backupDir } = require('../config.json');
 const capitalize = require('capitalize');
 const Manifest = require('./Manifest');
 const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages } = require("./utils");
@@ -29,6 +29,8 @@ class Component {
 
         let destino = destDir.charAt(destDir.length - 1) == '/' ? destDir : destDir + '/';
         this.destino = destino + 'components/' + this.nombre + '/';
+        let destBackup = backupDir.charAt(backupDir.length - 1) == '/' ? backupDir : backupDir + '/';
+        this.destBackup = destBackup + 'components/' + this.nombre + '/';
 
         if (this.manifiesto.files[0] !== undefined) {
             this.siteDestino = this.destino + this.manifiesto.files[0].$.folder + '/';
@@ -132,6 +134,18 @@ class Component {
         task(`copyComponent${this.cNombre}`, series(...this.copyComponent));
 
         return `copyComponent${this.cNombre}`;
+    }
+
+    get backupTask() {
+        let origen = this.destino + '**/*.*';
+        let destino = this.destBackup;
+
+        task(`backupComponent${this.cNombre}`, () => {
+            return src(origen, { allowEmpty:true })
+                .pipe(dest(destino))
+        })
+
+        return `backupComponent${this.cNombre}`;
     }
 
     // release Task
@@ -307,6 +321,7 @@ class Component {
         })
         this.copyComponent.push(`copyManifestFile${this.cNombre}`);
     }
+
 }
 
 module.exports = Component;

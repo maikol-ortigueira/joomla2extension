@@ -4,7 +4,7 @@ const { hasModules, getModules } = require("./utils");
 
 if (hasModules) {
     const clients = getModules();
-    let cleanModules = [], copyModules = [], releaseModules = []
+    let cleanModules = [], copyModules = [], backupModules = [], releaseModules = []
 
     for (let client in clients) {
         clients[client].forEach(name => {
@@ -12,11 +12,13 @@ if (hasModules) {
 
             cleanModules.push(module.cleanTask)
             copyModules.push(module.copyTask)
+            backupModules.push(module.backupTask)
             releaseModules.push(module.releaseTask)
         })
     }
 
     task(`cleanModules`, parallel(...cleanModules));
     task(`copyModules`, parallel(...copyModules));
+    task(`backupModules`, parallel(...backupModules));
     task(`releaseModules`, parallel(...releaseModules));    
 }

@@ -3,7 +3,7 @@ const { task, src, series, dest } = require('gulp')
 const gulpClean = require('gulp-clean')
 const gulpForeach = require('gulp-foreach')
 const GulpZip = require('gulp-zip')
-const { srcDir, destDir, releaseDir } = require('../config.json')
+const { srcDir, destDir, releaseDir, backupDir } = require('../config.json')
 const Manifest = require('./Manifest')
 const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages } = require("./utils")
 
@@ -33,6 +33,8 @@ class Modulo {
 
         let destino = destDir.charAt(destDir.length - 1) == '/' ? destDir : destDir + '/';
         this.destino = `${destino}modules/${this.cliente}/${this.nombre}/`;
+        let destBackup = backupDir.charAt(backupDir.length - 1) == '/' ? backupDir : backupDir + '/';
+        this.destBackup = `${destBackup}modules/${this.cliente}/${this.nombre}/`;
 
         if (this.manifiesto.languages !== undefined) {
             let folder = this.manifiesto.languages[0].language[0]['_'].split('/')[0];
@@ -91,6 +93,18 @@ class Modulo {
         task(`copyModule_${this.cliente}_${this.nombre}`, series(...this.copyModule));
 
         return `copyModule_${this.cliente}_${this.nombre}`;
+    }
+
+    get backupTask() {
+        let origen = this.destino + '**/*.*'
+        let destino = this.destBackup;
+
+        task(`backupModule_${this.cliente}_${this.nombre}`, function() {
+            return src(origen, { allowEmpty: true })
+            .pipe(dest(destino))
+        })
+
+        return `backupModule_${this.cliente}_${this.nombre}`;
     }
 
     // release Task

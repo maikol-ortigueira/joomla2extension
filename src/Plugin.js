@@ -1,5 +1,5 @@
 const { task, series, src, dest } = require('gulp')
-const { srcDir, destDir, releaseDir } = require('../config.json')
+const { srcDir, destDir, releaseDir, backupDir } = require('../config.json')
 const Manifest = require('./Manifest')
 const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages } = require('./utils')
 const capitalize = require('capitalize')
@@ -31,11 +31,15 @@ class Plugin {
 
         let destino = destDir.charAt(destDir.length - 1) == '/' ? destDir : destDir + '/';
         this.destino = `${destino}plugins/${group}/${this.nombre}/`;
+        let destBackup = backupDir.charAt(backupDir.length - 1) == '/' ? backupDir : backupDir + '/';
+        this.destBackup = `${destBackup}plugins/${group}/${this.nombre}/`;
 
-        if (this.manifiesto.languages[0] !== undefined) {
+        this.hasLanguageFiles = false;
+        if (this.manifiesto.languages !== undefined) {
             let folder = this.manifiesto.languages[0].language[0]['_'].split('/')[0];
             this.languageFolder = folder
             this.languageDestino = `${this.destino}${folder}/`
+            this.hasLanguageFiles = true;
         }
 
         let destinoRelease = releaseDir.charAt(releaseDir.length - 1) == '/' ? releaseDir : releaseDir + '/';
@@ -53,6 +57,7 @@ class Plugin {
     }
 
     get languages() {
+        if (this.hasLanguageFiles)
         return getManifestLanguages(this.manifiesto.languages, this.rutaLanguagesDesde, this.languageFolder)
     }
 
@@ -87,6 +92,18 @@ class Plugin {
         task(`copyPlugin_${this.group}_${this.nombre}`, series(...this.copyPlugin));
 
         return `copyPlugin_${this.group}_${this.nombre}`;
+    }
+
+    get backupTask() {
+        let origen = this.destino + '**/*.*';
+        let destino = this.destBackup;
+        
+        task(`backupPlugin_${this.group}_${this.nombre}`, function() {
+            return src(origen, { allowEmpty: true })
+            .pipe(dest(destino))
+        })
+
+        return `backupPlugin_${this.group}_${this.nombre}`    
     }
 
     // release Task
@@ -142,7 +159,7 @@ class Plugin {
     get copyLanguagesTask() {
         let languages = this.languages;
 
-        if (languages.length > 0) {
+        if (this.hasLanguageFiles) {
             let destino = this.languageDestino;
 
             task(`copyPluginLanguages_${this.group}_${this.nombre}`, function () {

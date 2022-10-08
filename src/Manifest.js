@@ -40,6 +40,9 @@ class Manifest {
                 tipo = tipo + '/' + nombre + '/'
                 this.prefijo = 'tpl'
                 break;
+            case 'librarys':
+                tipo = 'libraries/' + nombre + '/';
+                break;
         }
 
         this.filename = this.tipo == 'templates' ? ruta + tipo + 'templateDetails.xml' : ruta + tipo + nombre + '.xml';

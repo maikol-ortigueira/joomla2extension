@@ -5,7 +5,7 @@ const Plugin = require('./Plugin');
 if (hasPlugins) {
     const groups = getPlugins();
 
-    let cleanPlugins = [], copyPlugins = [], releasePlugins = [];
+    let cleanPlugins = [], copyPlugins = [], backupPlugins = [], releasePlugins = [];
 
     for (let type in groups) {
         groups[type].forEach(name => {
@@ -13,11 +13,13 @@ if (hasPlugins) {
 
             cleanPlugins.push(plugin.cleanTask)
             copyPlugins.push(plugin.copyTask)
+            backupPlugins.push(plugin.backupTask)
             releasePlugins.push(plugin.releaseTask)
         })
     }
 
     task(`cleanPlugins`, parallel(...cleanPlugins));
     task(`copyPlugins`, parallel(...copyPlugins));
+    task(`backupPlugins`, parallel(...backupPlugins));
     task(`releasePlugins`, parallel(...releasePlugins));
 }
