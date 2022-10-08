@@ -1,7 +1,7 @@
 const { task, series, src, dest } = require('gulp')
 const { srcDir, destDir, releaseDir, backupDir } = require('../config.json')
 const Manifest = require('./Manifest')
-const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages } = require('./utils')
+const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages, parseDestFolderName, parseFolderName } = require('./utils')
 const capitalize = require('capitalize')
 const gulpClean = require('gulp-clean')
 const gulpForeach = require('gulp-foreach')
@@ -145,7 +145,7 @@ class Plugin {
             task(`copyPluginFolders_${this.group}_${this.nombre}`, function() {
                 return src(folders, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let destFolderName = file.path.replace(/^\/+|\/+$/g, '').split('/')[long];
+                    let destFolderName = parseDestFolderName(file.path, long);
                     let destinoF = `${destino}${destFolderName}/`;
                     return stream
                     .pipe(dest(destinoF))
@@ -165,9 +165,9 @@ class Plugin {
             task(`copyPluginLanguages_${this.group}_${this.nombre}`, function () {
                 return src(languages, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let pathArray = file.path.split('/');
+                    let pathArray = parseFolderName(file.path).split('/');
                     let longPathArray = pathArray.length;
-                    let lang = pathArray[longPathArray - 2];
+                    let lang = parseDestFolderName(file.path, longPathArray - 2);
                     return stream
                     .pipe(dest(destino + lang + '/'))
                 }))

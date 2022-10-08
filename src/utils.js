@@ -174,7 +174,7 @@ const getXmlElement = (element, file) => {
 }
 
 const limpiarRuta = (ruta) => {
-    ruta = ruta.charAt(ruta.length - 1) == '/' ? ruta.toLowerCase() : ruta.toLowerCase() + '/';
+    ruta = ruta.charAt(ruta.length - 1) == '/' ? ruta : ruta + '/';
     return ruta;
 }
 
@@ -263,6 +263,16 @@ const getFecha = (local = 'es-ES') => {
     return fecha
 }
 
+const parseFolderName = (filePath) => {
+    filePath = filePath.replace(/^\/+|\/+$/g, '');
+    return filePath.replace(/\\/g, '/')
+}
+
+const parseDestFolderName = (filePath, long) => {
+    filePath = parseFolderName(filePath).split('/')[long]
+    return filePath;
+}
+
 module.exports = {
     hasComponents,
     getComponentsNames,
@@ -284,5 +294,7 @@ module.exports = {
     getManisfestFolders,
     getManifestLanguages,
     getDefault,
-    getFecha
+    getFecha,
+    parseFolderName,
+    parseDestFolderName
 }

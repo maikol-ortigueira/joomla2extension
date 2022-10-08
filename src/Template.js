@@ -1,5 +1,5 @@
 const Manifest = require("./Manifest");
-const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages } = require("./utils");
+const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages, parseFolderName, parseDestFolderName } = require("./utils");
 const { destDir, srcDir, releaseDir, backupDir } = require('../config.json');
 const capitalize = require("capitalize");
 const { task, src, dest, series } = require("gulp");
@@ -201,7 +201,7 @@ class Template {
             task(`copyTemplateFolders${this.cNombre}`, function (cb) {
                 return src(folders, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let destinoF = destino + file.path.replace(/^\/+|\/+$/g, '').split('/')[srcPathsArrayLong] + '/'
+                    let destinoF = destino + parseDestFolderName(file.path, srcPathsArrayLong) + '/'
                     return stream
                     .pipe(dest(destinoF))
                 }))
@@ -234,7 +234,7 @@ class Template {
             task(`copyTemplateMediaFolders${this.cNombre}`, function (cb) {
                 return src(mediaFolders, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let mediaDestino = destino + '/media/' + file.path.replace(/^\/+|\/+$/g, '').split('/')[srcMediaPathArray];
+                    let mediaDestino = destino + '/media/' + parseDestFolderName(file.path, srcMediaPathArray) + '/';
                     return stream
                     .pipe(dest(mediaDestino))
                 }))
@@ -253,9 +253,9 @@ class Template {
             task(`copyTemplateLanguagesFiles${this.cNombre}`, function (cb) {
                 return src(languages, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let pathArray = file.path.split('/');
+                    let pathArray = parseFolderName(file.path).split('/');
                     let longPathArray = pathArray.length;
-                    let idioma = pathArray[longPathArray - 2];
+                    let idioma = parseDestFolderName(file.path, longPathArray - 2);
                     return stream
                     .pipe(dest(destino + folder + '/' + idioma + '/'))
                 }))

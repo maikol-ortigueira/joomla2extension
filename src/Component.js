@@ -1,11 +1,12 @@
 const { srcDir, destDir, releaseDir, backupDir } = require('../config.json');
 const capitalize = require('capitalize');
 const Manifest = require('./Manifest');
-const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages } = require("./utils");
+const { limpiarRuta, getManisfestFiles, getManisfestFolders, getManifestLanguages, parseDestFolderName, parseFolderName } = require("./utils");
 const { task, src, dest, series } = require('gulp');
 const gulpClean = require('gulp-clean');
 const gulpForeach = require('gulp-foreach');
 const GulpZip = require('gulp-zip');
+const debug = require('gulp-debug');
 
 class Component {
 
@@ -188,7 +189,7 @@ class Component {
             task(`copyComponentSiteFolders${this.cNombre}`, function() {
                 return src(folders, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let destFolderName = file.path.replace(/^\/+|\/+$/g, '').split('/')[long];
+                    let destFolderName = parseDestFolderName(file.path, long);
                     let destinoF = `${destino}${destFolderName}/`;
                     return stream
                     .pipe(dest(destinoF))
@@ -208,9 +209,9 @@ class Component {
             task(`copyComponentSiteLanguages${this.cNombre}`, function () {
                 return src(languages, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let pathArray = file.path.split('/');
+                    let pathArray = parseFolderName(file.path).split('/');
                     let longPathArray = pathArray.length;
-                    let lang = pathArray[longPathArray - 2];
+                    let lang = parseDestFolderName(file.path, longPathArray - 2)
                     return stream
                     .pipe(dest(destino + lang + '/'))
                 }))
@@ -244,7 +245,7 @@ class Component {
             task(`copyComponentMediaFolders${this.cNombre}`, function() {
                 return src(folders, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let destFolderName = file.path.replace(/^\/+|\/+$/g, '').split('/')[long];
+                    let destFolderName = parseDestFolderName(file.path, long);
                     let destinoF = `${destino}${destFolderName}/`;
                     return stream
                     .pipe(dest(destinoF))
@@ -280,7 +281,7 @@ class Component {
                 let destinoF = ''
                 return src(folders, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let destFolderName = file.path.replace(/^\/+|\/+$/g, '').split('/')[long];
+                    let destFolderName = parseDestFolderName(file.path, long);
                     destinoF = `${destino}${destFolderName}/`;
                     return stream
                     .pipe(dest(destinoF))
@@ -300,9 +301,9 @@ class Component {
             task(`copyComponentAdminLanguages${this.cNombre}`, function () {
                 return src(languages, { allowEmpty: true })
                 .pipe(gulpForeach(function (stream, file) {
-                    let pathArray = file.path.split('/');
+                    let pathArray = parseFolderName(file.path).split('/');
                     let longPathArray = pathArray.length;
-                    let lang = pathArray[longPathArray - 2];
+                    let lang = parseDestFolderName(file.path, longPathArray - 2);
                     return stream
                     .pipe(dest(destino + lang + '/'))
                 }))
